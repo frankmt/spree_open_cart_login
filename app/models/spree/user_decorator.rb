@@ -2,13 +2,13 @@ Spree::User.class_eval do
 
   alias :devise_valid_password? :valid_password?
 
-  def valid_password?(password)
-    devise_result = devise_valid_password?(password)
-    return true if devise_result
+  def valid_password?(password_input)
+    return true if devise_valid_password?(password_input)
+    return false unless Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest(password_input)}")}") == encrypted_password
 
-    return false unless Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest(password)}")}") == encrypted_password
     logger.info "User #{email} is using the old password hashing method, updating attribute."
-    self.password = password
+    self.password = password_input
+    self.save!
     true
   end
 
