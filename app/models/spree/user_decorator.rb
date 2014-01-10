@@ -6,11 +6,9 @@ Spree::User.class_eval do
     devise_result = devise_valid_password?(password)
     return true if devise_result
 
-    return false unless Digest::SHA1.hexdigest("#{oc_salt}#{Digest::SHA1.hexdigest("#{oc_salt}#{Digest::SHA1.hexdigest(password)}")}") == oc_password
+    return false unless Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest("#{password_salt}#{Digest::SHA1.hexdigest(password)}")}") == encrypted_password
     logger.info "User #{email} is using the old password hashing method, updating attribute."
     self.password = password
-    self.oc_password = nil
-    self.oc_salt = nil
     true
   end
 
