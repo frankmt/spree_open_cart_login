@@ -18,6 +18,8 @@ require File.expand_path('../dummy/config/environment.rb',  __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
 require 'ffaker'
+require 'capybara'
+require 'capybara/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -33,6 +35,8 @@ require 'spree/testing_support/url_helpers'
 require 'spree_open_cart_login/factories'
 
 RSpec.configure do |config|
+  config.include Capybara::DSL
+
   config.include FactoryGirl::Syntax::Methods
 
   # == URL Helpers
